@@ -1,1 +1,41 @@
 # FitAI
+
+A mobile-first fitness app for intelligent wardrobe management and outfit recommendations powered by AI.
+
+## 🎯 Current Phase: Closet Builder
+
+### Phase 1 Goals
+Build a wardrobe management system where users can:
+- Upload & tag clothing items
+- Automatic background removal
+- AI-powered auto-tagging (category & color)
+- Manual tag editing
+
+## 🏗️ Technology Stack
+
+- **Framework**: Expo + React Native (TypeScript)
+- **Backend**: Supabase (Auth, Database, Storage)
+- **Platform**: iOS & Android (mobile-first approach)
+
+## ✅ Progress Tracker
+
+### Completed
+- [x] Expo project initialized with TypeScript
+- [x] Supabase packages installed
+- [x] Project structure created
+- [x] Supabase client configured
+
+### Next Steps
+- [ ] Authentication UI
+- [ ] Image upload flow
+- [ ] Database schema
+
+## 🔐 Environment Configuration
+
+Create a `.env` file in the project root:
+```bash
+EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
+```
+
+For production: Use `eas secret:create` to set environment variables securely.
