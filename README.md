@@ -35,10 +35,21 @@ Build a wardrobe management system where users can:
 
 ## 🔐 Environment Configuration
 
-Create a `.env` file in the project root:
+### Setup Supabase
+
+1. Create a `.env` file in the project root:
 ```bash
 EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 EXPO_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
 ```
+
+2. **Create Storage Bucket** (Required for image uploads):
+   - Go to Supabase Dashboard → Storage
+   - Create a new bucket called `clothing`
+   - Make it public (for now) or set up RLS policies
+
+3. Configure Authentication URLs:
+   - Go to Authentication → URL Configuration
+   - Add redirect URLs for your app
 
 For production: Use `eas secret:create` to set environment variables securely.

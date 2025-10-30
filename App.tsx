@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthScreen from './screens/AuthScreen';
-import HomeScreen from './screens/HomeScreen';
+import AppNavigator from './navigation/AppNavigator';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -15,7 +16,13 @@ function AppContent() {
     );
   }
 
-  return user ? <HomeScreen /> : <AuthScreen />;
+  if (!user) return <AuthScreen />;
+  
+  return (
+    <NavigationContainer>
+      <AppNavigator />
+    </NavigationContainer>
+  );
 }
 
 export default function App() {
