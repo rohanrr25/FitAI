@@ -19,25 +19,41 @@ export default function UploadScreen() {
   const [uploading, setUploading] = useState(false);
 
   const pickImageFromGallery = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
-      quality: 0.8,
-    });
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'] as any,
+        allowsMultipleSelection: true,
+        quality: 0.8,
+      });
 
-    if (!result.canceled && result.assets) {
-      setImages([...images, ...result.assets]);
+      if (!result.canceled && result.assets) {
+        setImages([...images, ...result.assets]);
+      }
+    } catch (error: any) {
+      Alert.alert('Error', 'Failed to pick image: ' + error.message);
     }
   };
 
   const takePhotoWithCamera = async () => {
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 0.8,
-    });
+    try {
+      // Request camera permissions
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      
+      if (status !== 'granted') {
+        Alert.alert('Permission Required', 'Camera permission is required to take photos');
+        return;
+      }
 
-    if (!result.canceled && result.assets) {
-      setImages([...images, ...result.assets]);
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ['images'] as any,
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets) {
+        setImages([...images, ...result.assets]);
+      }
+    } catch (error: any) {
+      Alert.alert('Error', 'Failed to take photo: ' + error.message);
     }
   };
 
@@ -56,29 +72,36 @@ export default function UploadScreen() {
       setUploading(true);
       
       for (const image of images) {
-        const fileExtension = image.uri.split('.').pop();
+        const fileExtension = image.uri.split('.').pop() || 'jpg';
         const fileName = `${user?.id}/${Date.now()}.${fileExtension}`;
 
-        // Convert image to blob
+        // Convert image to base64 or use FormData approach
         const response = await fetch(image.uri);
         const blob = await response.blob();
+        
+        // Create a File object from blob for better compatibility
+        const file = new File([blob], fileName, { 
+          type: image.mimeType || 'image/jpeg' 
+        });
 
         // Upload to Supabase Storage
         const { error } = await supabase.storage
           .from('clothing')
-          .upload(fileName, blob, {
+          .upload(fileName, file, {
             contentType: image.mimeType || 'image/jpeg',
           });
 
         if (error) {
+          console.error('Upload error:', error);
           throw error;
         }
       }
 
-      Alert.alert('Success', 'Images uploaded successfully!');
+      Alert.alert('Success', `${images.length} image(s) uploaded successfully!`);
       setImages([]);
     } catch (error: any) {
-      Alert.alert('Error', error.message || 'Failed to upload images');
+      console.error('Upload failed:', error);
+      Alert.alert('Error', error.message || 'Failed to upload images. Make sure the "clothing" storage bucket exists in Supabase.');
     } finally {
       setUploading(false);
     }
