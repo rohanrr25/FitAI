@@ -24,11 +24,14 @@ Build a wardrobe management system where users can:
 - [x] Supabase packages installed
 - [x] Project structure created
 - [x] Supabase client configured
+- [x] Authentication UI (email/password + Google OAuth)
+- [x] User session management
 
 ### Next Steps
-- [ ] Authentication UI
-- [ ] Image upload flow
-- [ ] Database schema
+- [ ] Image upload flow (camera + gallery)
+- [ ] Database schema for clothing items
+- [ ] Background removal integration
+- [ ] AI auto-tagging
 
 ## 🔐 Environment Configuration
 
